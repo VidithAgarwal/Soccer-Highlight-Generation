@@ -40,5 +40,56 @@ This project is an **Automatic Video Highlight Generation System** that processe
 
 ## Directory Structure
 
-```markdown
-project/ │ ├── data/ │ ├── raw_videos/ # Full match videos │ ├── annotations/ # JSON files with event details │ ├── processed_clips/ # 20-second labeled video clips │ ├── goals/ │ ├── fouls/ │ ├── saves/ │ ├── scripts/ │ ├── preprocess.py # Script to extract labeled clips │ ├── train_model.py # Script to train the ResNet + GRU model │ ├── generate_highlights.py # Script to generate highlight reels │ ├── models/ │ ├── resnet/ # Pretrained ResNet model for feature extraction │ ├── gru/ # Fine-tuned GRU model for action recognition │ ├── output/ │ ├── highlights/ # Generated highlight reels │ ├── README.md # Project documentation └── requirements.txt # List of dependencies
+```bash
+project/
+├── videos/
+│   ├── league_name/           # Name of the league. Eg. england_epl
+|       ├── Season             # The season. Eg. 2015-2026
+|         ├── Match            # Folder with name of the match. Eg. 2015-02-21 - 18-00 Chelsea 1 - 1 Burnley
+|            ├── 1st Half      # First half of the match (45 mins clip). Named 1_720p.
+|            ├── 2nd Half      # Second half of the match (45 mins clip). Named 2_720p.
+|            ├── Json file     # Labels.json file containing the annotation for this particular match
+│   ├── extracted/             # Extracted key moments 
+│       ├── goals/             # Clips labeled as goals
+│       ├── fouls/             # Clips labeled as fouls
+│       ├── saves/             # Clips labeled as saves
+├── /
+│   ├── ResNet and GRU         # Implementation of ResNet and GRU model
+│   ├── Data_gen_script        # Script to extract 20sec labeled videos
+│   ├── Feature_Extraction.py  # Script to extract features from videos
+|   ├── Video_Download.py      # Script to download the full match videos
+├── README.md                  # Project documentation
+└── requirements.txt           # List of dependencies
+```
+## Setup and Usage
+
+### 1. Prerequisites
+- Python 3.8 or above
+- Install required dependencies:  
+  ```bash
+  pip install -r requirements.txt
+   ```
+### 2. Dataset Setup
+- To Download the Soccernet Dataset run the `Video_Download script`. It will automatically create the videos directory with the videos.
+```bash
+python Video_Download.py
+```
+### 3. Extract Clips and place them in their respective folder
+
+- Run the script file `Data_gen_script` to extract the 20 second clips of key moments from full videos based on the annotation and store them in their respective folder.
+```bash
+python Data_gen_script.py
+```
+### 4. Convert the data into tensors and pass them into GRU for training.
+
+- Run the FAI Project ResNet and GRU Implementation.ipynb file to first trigger ResNet to extract features and convert clips into tensors, which is then passed to the fine-tuned GRU model for training.
+
+
+## Future Improvements
+- **Real-Time Processing**: Extend the system to support real-time action detection during live matches.
+- **Multi-Sport Support**: Adapt the model for other sports like basketball, cricket, and tennis.
+- **Improved Accuracy**: Experiment with transformers and hybrid models to enhance classification precision.
+
+## Acknowledgments
+- **Soccernet Dataset** for providing the match videos and annotations.
+- **TensorFlow/Keras and ResNet** for enabling robust deep learning workflows.
