@@ -1,108 +1,72 @@
+# **⚽ SoccerNet Highlight Generator**
 
-# SoccerNet Highlight  Generator
+## **📖 Overview**
+This project automates the creation of soccer match highlights by:
+- Downloading match videos.
+- Identifying key moments.
+- Compiling highlight reels.
 
----
-
-## Project Overview
-
-This project automates the generation of highlights for soccer matches by downloading match videos, identifying key moments, and creating a highlight compilation using deep learning models. The pipeline uses **ResNet** for feature extraction and a custom GRU model with an attention mechanism for classification.
-
----
-
-## Workflow
-
-### 1. Video Downloading
-- **Script**: `video_download.py`
-- **Description**: Downloads soccer match videos from the **SoccerNet** server.
-- **Input**: Match metadata or URLs provided by SoccerNet.
-- **Output**: Raw video files saved in a specified directory.
+It uses **ResNet-50** for feature extraction and a custom **GRU model with an attention mechanism** for event classification. For a live demonstration, the model can be deployed using tools like Gradio for interactive exploration.
 
 ---
 
-### 2. Key Moment Extraction
-- **Script**: `feature_extraction.py`
-- **Description**: Extracts timestamps of key events (e.g., goals, fouls, etc.) from the SoccerNet-provided `labels.json` file.
-- **Input**: JSON file with annotated key moments.
-- **Output**: Cropped video clips corresponding to key moments.
+## **✨ Features**
+
+### **1. Data Preparation**
+- **Dataset Source**: Leverages the SoccerNet dataset, which includes match videos and JSON files with detailed annotations.
+- **Clip Extraction**: Extracts 10-second clips around key moments. For example:
+  - If a goal occurs at 20 minutes, a clip from 19:55 to 20:05 is saved in the **goals** folder.
+- **Organized Training Data**: Creates labeled folders (e.g., `goals`, `fouls`, `corners`) for each action type.
 
 ---
 
-### 3. Feature Extraction
-- **Script**: Integrated in `resnet_training.py`
-- **Description**: Processes video frames using a pre-trained **ResNet-50** model to extract features.
-- **Input**: Video clips.
-- **Output**: ResNet-encoded feature vectors for each frame.
+### **2. Model Training**
+- **Feature Extraction**: Converts 10-second clips into tensors using a pre-trained **ResNet-50** model.
+- **Training Process**: 
+  - Pairs feature tensors with labels (folder names).
+  - Feeds them into a custom **GRU model with attention** for classification.
+- **Fine-Tuning**: Optimizes the GRU model for precise event detection.
+- **Output**: Produces a trained model that can identify soccer actions from video clips.
 
 ---
 
-### 4. Model Training
-- **Script**: `model_training.py`
-- **Description**: Trains a **GRU-based model with attention** on the ResNet-encoded features to classify key moments.
-- **Input**: ResNet feature vectors.
-- **Output**: A PyTorch model (`final_enhanced_gru_model.pth`) for event classification.
+### **3. Action Detection**
+- **Video Segmentation**: Divides full match videos into 10-second clips.
+- **Action Classification**: Passes each clip through the trained model to classify actions (e.g., goal, foul, kickoff).
+- **Action Ranking**: Assigns importance scores to actions based on predefined rankings.
 
 ---
 
-### 5. Model Evaluation
-- **Script**: `accuracy.py`
-- **Description**: Evaluates the trained model's performance using metrics like accuracy, precision, recall, etc.
-- **Input**: Validation/test dataset with ResNet features and ground-truth labels.
-- **Output**: Evaluation metrics.
+### **4. Highlight Generation**
+- **Key Moment Selection**: Identifies the most critical moments using rankings.
+- **Highlight Compilation**: Stitches the clips into a smooth highlight reel.
+- **Automated Workflow**: Generates highlight videos from full match footage, ready for sharing.
 
 ---
 
-### 6. Highlight Generation
-- **Script**: `highlight_generator.py`
-- **Description**: Uses the trained model to classify events in a new match video and compiles a highlight reel.
-- **Input**: Match video clips.
-- **Output**: A highlight reel (`highlight_reel.mp4`).
+### **5. User Interaction**
+- **Input**: Users upload a full soccer match video.
+- **Output**: A polished highlight reel featuring the most exciting moments.
 
 ---
 
-## How to Run
-
-### Step 1: Clone the Repository
-```bash
-git clone <repository_url>
-cd SoccerNet-Highlight-Reel-Generator
-```
-
-### Step 2: Install Dependencies
-Install the required Python packages:
-```bash
-pip install -r requirements.txt
-```
-
-### Step 3: Download Videos
-Run the video download script:
-```bash
-python video_download.py --config config.json
-```
-
-### Step 4: Extract Key Moments
-Use `labels.json` to segment the downloaded videos into key moments.
-
-### Step 5: Train the Model
-Train the GRU model using the prepared dataset:
-```bash
-python model_training.py --data_path <path_to_prepared_dataset>
-```
-
-### Step 6: Evaluate the Model
-Run `accuracy.py` to test model performance:
-```bash
-python accuracy.py --model_path final_enhanced_gru_model.pth
-```
-
-### Step 7: Generate Highlights
-Use the trained model to create a highlight reel:
-```bash
-python highlight_generator.py --input_path <path_to_video_clips> --output_path highlight_reel.mp4
-```
+## **📂 Document Overview**
+| File                          | Description                                           |
+|-------------------------------|-------------------------------------------------------|
+| `video_download.py`           | Downloads match videos from the SoccerNet server.     |
+| `label_extraction.py`         | Extracts key timestamps and creates video clips.      |
+| `resnet50_feature_extraction.py` | Extracts feature vectors using ResNet-50.          |
+| `model_training.py`           | Trains the GRU model with attention.                 |
+| `inference_on_all_videos.py`  | Evaluates the model's performance.                   |
+| `test_video_to_clips.py`      | Segments full match videos into 10-second clips.     |
+| `highlight_generator.py`      | Compiles highlights from classified clips.           |
 
 ---
 
-## Dependencies
+## **🚀 Getting Started**
+
+### **Prerequisites**
+Ensure you have the following installed:
 - Python 3.8+
 - PyTorch
 - OpenCV
@@ -111,24 +75,70 @@ python highlight_generator.py --input_path <path_to_video_clips> --output_path h
 
 ---
 
-## Directory Structure
+### **Installation**
+
+### Step 1: Clone the Repository
+```bash
+git clone https://github.com/aatmaj28/Soccer-Highlight-Generation.git
+cd Soccer-Highlight-Generation
 ```
-.
-├── video_download.py
-├── model_training.py
-├── accuracy.py
-├── highlight_generator.py
-├── requirements.txt
-├── labels.json
-└── README.md
+
+### Step 2: Install Dependencies
+Install the required Python packages:
+```bash
+pip install <all packages mentioned above>
 ```
+
+### Step 3: Download Videos
+Run the video download script:
+```bash
+python video_download.py
+```
+
+### Step 4: Extract Key Moments from videos into clips
+```bash
+python label_extraction.py
+```
+
+### Step 5: Extract Features into feature vector
+```bash
+python resnet50_feature_extraction.py
+```
+
+### Step 6: Train the Model
+Train the GRU model using the prepared dataset:
+```bash
+python model_training.py
+```
+
+### Step 7: Evaluate the Model
+Run `inference_on_all_videos.py` to test model performance:
+```bash
+python inference_on_all_videos.py
+```
+
+### Step 8: Generate Highlights
+Use the trained model to create a highlight reel:
+```bash
+python test_video_to_clips.py
+python highlight_generation.py
+```
+
+## **Contributing**
+Contributions are welcome! If you would like to contribute to this project, please fork the repository and submit a pull request.
 
 ---
 
-## Contributors
-- **Your Name**
+## **Acknowledgments**
+This project utilizes the following resources and libraries:
+- [PyTorch](https://pytorch.org/) for deep learning models.
+- [OpenCV](https://opencv.org/) for video processing.
+- [SoccerNet](https://www.soccer-net.org/) for providing video data and annotations.
+- Pre-trained **ResNet-50** for feature extraction.
 
 ---
 
-## License
-This project is licensed under the MIT License.
+## **Resources**
+The models were trained using and combining the following resources:
+- [SoccerNet datasets](https://www.soccer-net.org/) for annotated match videos.
+- Custom-built datasets with enhanced event annotations.
