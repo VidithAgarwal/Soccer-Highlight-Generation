@@ -124,12 +124,12 @@ python test_video_to_clips.py
 python highlight_generation.py
 ```
 
-## **Contributing**
+## **🤝 Contributing**
 Contributions are welcome! If you would like to contribute to this project, please fork the repository and submit a pull request.
 
 ---
 
-## **Acknowledgments**
+## **🙏 Acknowledgments**
 This project utilizes the following resources and libraries:
 - [PyTorch](https://pytorch.org/) for deep learning models.
 - [OpenCV](https://opencv.org/) for video processing.
@@ -138,7 +138,7 @@ This project utilizes the following resources and libraries:
 
 ---
 
-## **Resources**
+## **📚 Resources**
 The models were trained using and combining the following resources:
 - [SoccerNet datasets](https://www.soccer-net.org/) for annotated match videos.
 - Custom-built datasets with enhanced event annotations.
